@@ -1,0 +1,17 @@
+disclaimer:
+
+the reason for my writing this is that I've hit a road block in my career. despite my qualifications, my lack of experience has made me realise just utterly ill-prepared i am to contribute meaningfully to the field of data science. this is me starting from zero, going through every aspect of a project in a methodical fashion in order to explore and understand its meaning and use. i'm just throwing things at the wall to see how it sticks; treating it like a final year research.
+
+i've learnt many things at SAS Institute and I'm putting it to practice.
+
+
+
+Actual notes:
+
+Features with relatively high percentage of missng values will be discarded first (KIV in case they can be used as rare valuse)
+    - PoolQC, MiscFeature, Alley, Fence, FireplaceQu, LotFrontage
+
+
+Convert categorical variables to numerical so they can be compared
+    - LabelEncoder for ordinal
+    - One-hot for vanilla categorical
