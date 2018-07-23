@@ -1,8 +1,8 @@
 Variable,Type,Description,Correlation,Impressions
 1stFlrSF,Numerical,First Floor square feet,0.605852,
-2ndFlrSF,Numerical, Second floor square feet,0.319334,
+2ndFlrSF,Numerical,Second floor square feet,0.319334,
 3SsnPorch,Numerical, Three season porch area in square feet,0.044584,
-Alley,Categorical,Type of alley access ,,
+Alley,Categorical,Type of alley access ,,"Majority missing, drop first (could be rare value)"
 BedroomAbvGr,Numerical,Bedrooms above grade (does NOT include basement bedrooms),0.168213,
 BldgType,Categorical,type of dwelling (how many fam),,
 BsmtCond,Categorical,general condition of the basement (Poor to excellent),,
@@ -24,8 +24,8 @@ ExterCond,Categorical,condition of the material on the exterior  (Poor to excell
 Exterior1st,Categorical,Exterior covering,,
 Exterior2nd,Categorical,Exterior covering,,
 ExterQual,Categorical,Quality of the material on the exterior (Poor to excellent),,
-Fence,Categorical, Fence quality,,
-FireplaceQu,Categorical,Fireplace quality (Poor to Excellent),,
+Fence,Categorical, Fence quality,,"Majority missing, drop first (could be rare value)"
+FireplaceQu,Categorical,Fireplace quality (Poor to Excellent),,"Many missing, drop first (could be rare value)"
 Fireplaces,Numerical,Number of fireplaces,0.466929,
 Foundation,Categorical,Type of foundation ,,
 FullBath,Numerical,Full bathrooms above ground,0.560664,
@@ -47,12 +47,12 @@ LandContour,Categorical,Flatness,,
 LandSlope,Categorical,Steepness of property,,
 LotArea,Numerical,Lot size in sqfeet,0.263843,
 LotConfig,Categorical,"Lot location relative to others (corner lot, inside lot, cul-de-sac etc.)",,
-LotFrontage,Numerical,Linear fee of street connected to property,0.351799,
+LotFrontage,Numerical,Linear fee of street connected to property,0.351799,"Many missing, drop first (could be rare value)"
 LotShape,Categorical,"Shape of property (regular, irregular etc)",,
 LowQualFinSF,Numerical,Low quality finished square feet (all floors),-0.025606,
 MasVnrArea,Numerical,Masonry veneer area in square feet,0.477493,
 MasVnrType,Categorical,"Masonry veneer type (brick, stone etc.)",,
-MiscFeature,Categorical,Miscellaneous feature not covered in other categories,,
+MiscFeature,Categorical,Miscellaneous feature not covered in other categories,,"Majority missing, drop first (could be rare value)"
 MiscVal,Numerical,$Value of miscellaneous feature,-0.02119,
 MoSold,Numerical,Month Sold (MM),0.046432,
 MSSubClass,Categorical,"Type of dwelling (no. Of floors, etc.)",-0.084284,
@@ -63,7 +63,7 @@ OverallCond,Categorical,Rating of condition from 1 to 10,-0.077856,
 OverallQual,Categorical,Rating of quality from 1 to 10,0.790982,
 PavedDrive,Categorical,"Paved driveway (paved, partial, gravel)",,
 PoolArea,Numerical,Pool area in square feet,0.092404,
-PoolQC,Categorical,Pool quality (No Pool to Excellent),,
+PoolQC,Categorical,Pool quality (No Pool to Excellent),,"Majority missing, drop first (could be rare value)"
 RoofMatl,Categorical,"Roof material (clay, tile, etc.)",,
 RoofStyle,Categorical,"Type of roof (flat, shed, etc.)",,
 SaleCondition,Categorical,"Condition of sale (Normal, abnormal, etc.)",,

@@ -73,7 +73,7 @@ sns.distplot(train['SalePrice'])
 # %%
 # Log-transform target feature
 train['SalePrice_log'] = np.where(train['SalePrice'] <= 0, train['SalePrice'],
-                                  np.log(train['SalePrice']))
+                                  np.log10(train['SalePrice']))
 Y = train['SalePrice_log']
 fig, ax = plt.subplots(nrows=2, ncols=1, figsize=(12, 7))
 sns.distplot(train['SalePrice'], ax=ax[0])
@@ -142,11 +142,13 @@ X = pd.merge(
     left_index=True,
     right_index=True)
 
+
+
 # %%
 # -- Project Runway --
 # Build random forest regressor
 kf = KFold(n_splits=10)
-for train_idx, test_idx in kf.split(X):
+for i, (train_idx, test_idx) in enumerate(kf.split(X)):
     x_train = X.loc[train_idx]
     y_train = Y.loc[train_idx]
     x_test = X.loc[test_idx]
@@ -154,7 +156,7 @@ for train_idx, test_idx in kf.split(X):
     rfr = RandomForestRegressor(verbose=0)
     rfr.fit(x_train, y_train)
     predictions = rfr.predict(x_test)
-    print('RMSE: {:<5f}'.format(mean_squared_error(y_test, predictions)))
+    print('{} RMSE: {:<5f}'.format(i+1, mean_squared_error(y_test, predictions)))
 
 fi = pd.DataFrame(data={
     'feature': X.columns,
@@ -175,8 +177,8 @@ X_sub = pd.merge(
     X_sub,
     left_index=True,
     right_index=True)
-rfr = RandomForestRegressor(verbose=1)
+rfr = RandomForestRegressor(verbose=0)
 rfr.fit(X, Y)
 test['SalePrice'] = np.exp(rfr.predict(X_sub))
 submit = test[['Id','SalePrice']]
-submit.to_csv(path_or_buf=(data_dir + 'submit.csv'))
+submit.to_csv(path_or_buf=(data_dir + 'submit.csv'), index=False)

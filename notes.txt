@@ -15,3 +15,4 @@ Features with relatively high percentage of missng values will be discarded firs
 Convert categorical variables to numerical so they can be compared
     - LabelEncoder for ordinal
     - One-hot for vanilla categorical
+
