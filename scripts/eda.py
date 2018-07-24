@@ -46,7 +46,7 @@ data_dir = './data/'
 
 # Read input files
 train = pd.read_csv(data_dir + 'train.csv')
-test =  pd.read_csv(data_dir + 'test.csv')
+test = pd.read_csv(data_dir + 'test.csv')
 print('Setup complete')
 # ----
 
@@ -142,8 +142,6 @@ X = pd.merge(
     left_index=True,
     right_index=True)
 
-
-
 # %%
 # -- Project Runway --
 # Build random forest regressor
@@ -156,7 +154,8 @@ for i, (train_idx, test_idx) in enumerate(kf.split(X)):
     rfr = RandomForestRegressor(verbose=0)
     rfr.fit(x_train, y_train)
     predictions = rfr.predict(x_test)
-    print('{} RMSE: {:<5f}'.format(i+1, mean_squared_error(y_test, predictions)))
+    print('{} RMSE: {:<5f}'.format(i + 1,
+                                   mean_squared_error(y_test, predictions)))
 
 fi = pd.DataFrame(data={
     'feature': X.columns,
@@ -171,7 +170,7 @@ X_sub = pd.DataFrame()
 
 for var in label_vars:
     X_sub[var + '_enc'] = label_encode(test[var].fillna('missing'), grades)
-    
+
 X_sub = pd.merge(
     pd.get_dummies(test['Neighborhood'], drop_first=True),
     X_sub,
@@ -180,5 +179,5 @@ X_sub = pd.merge(
 rfr = RandomForestRegressor(verbose=0)
 rfr.fit(X, Y)
 test['SalePrice'] = np.exp(rfr.predict(X_sub))
-submit = test[['Id','SalePrice']]
+submit = test[['Id', 'SalePrice']]
 submit.to_csv(path_or_buf=(data_dir + 'submit.csv'), index=False)
