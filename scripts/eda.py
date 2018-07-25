@@ -3,43 +3,17 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import udf
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import preprocessing
 from sklearn.model_selection import KFold
 from sklearn.metrics import mean_squared_error
 from scipy import stats
 
+
 # -- Setup --
 # Seaborn settings
 sns.set()
-
-
-# User-defined functions
-def anova(df, varname):
-    '''
-    Function to streamline one-way ANOVA of categorical features
-    '''
-    vals = list()
-    df.fillna('missing', inplace=True)
-    for cat in df[varname].unique().tolist():
-        vals.append(
-            df.loc[df[varname] == cat, 'SalePrice_log'].values.tolist())
-    f_value, p_value = stats.f_oneway(*vals)
-
-    return f_value, p_value
-
-
-def label_encode(var, values):
-    '''
-    Function to streamline label encoding ordinal features. 
-    'values' argument must be list of labels in ascending order.
-    '''
-    le = preprocessing.LabelEncoder()
-    le.fit(values)
-    var_encoded = le.transform(var)
-
-    return var_encoded
-
 
 # Data folder
 data_dir = './data/'
@@ -109,7 +83,7 @@ print(corr['SalePrice_log'].sort_values(ascending=False))
 # ANOVA of categorical variables
 anova_output = pd.DataFrame(columns=['feature', 'f_value', 'p_value'])
 for col in train.select_dtypes(include=['object']).columns.tolist():
-    f_value, p_value = anova(train, col)
+    f_value, p_value = udf.anova(train, col, 'SalePrice_log')
     anova_output = anova_output.append(
         {
             'feature': col,
@@ -132,7 +106,7 @@ grades = ['missing', 'Po', 'Fa', 'TA', 'Gd', 'Ex']
 label_vars = ['ExterQual', 'BsmtQual', 'KitchenQual']
 
 for var in label_vars:
-    X[var + '_enc'] = label_encode(train[var].fillna('missing'), grades)
+    X[var + '_enc'] = udf.label_encode(train[var].fillna('missing'), grades)
 
 # %%
 # One-hot encoding discrete categorical features
@@ -169,7 +143,7 @@ print(fi.reindex(fi.importance.sort_values(ascending=False).index))
 X_sub = pd.DataFrame()
 
 for var in label_vars:
-    X_sub[var + '_enc'] = label_encode(test[var].fillna('missing'), grades)
+    X_sub[var + '_enc'] = udf.label_encode(test[var].fillna('missing'), grades)
 
 X_sub = pd.merge(
     pd.get_dummies(test['Neighborhood'], drop_first=True),

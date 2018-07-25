@@ -1,20 +1,11 @@
 # -- Setup --
 import pandas as pd
 import numpy as np
+import udf
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn import preprocessing
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import make_scorer
-
-
-# UDFs
-def rmse(y, y_pred):
-    '''
-    Defining root-mean-squared error for 
-    model optimisation
-    '''
-    return np.sqrt(np.mean((y_pred - y)**2))
-
 
 # Data folder
 data_dir = './data/'
@@ -30,13 +21,13 @@ X_test = pd.read_csv(data_dir + 'clean_test.csv')
 # Build gradient boosted regressor,
 # Optimise hyperparameters with GridSearchCV
 param_grid = {
-    'learning_rate': [0.005, 0.01, 0.02],
-    'n_estimators': [1000, 1250, 1500, 1750],
+    'learning_rate': [0.01, 0.02, 0.05],
+    'n_estimators': [1500, 1750, 2000],
     'max_depth': [1, 3, 5],
     'max_features': ['log2']
 }
 gbr = GradientBoostingRegressor(random_state=5)
-rmse_scorer = make_scorer(rmse, greater_is_better=False)
+rmse_scorer = make_scorer(udf.rmse, greater_is_better=False)
 gbr_cv = GridSearchCV(
     estimator=gbr,
     param_grid=param_grid,

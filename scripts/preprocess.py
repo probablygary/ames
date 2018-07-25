@@ -1,6 +1,7 @@
 # -- Setup --
 import pandas as pd
 import numpy as np
+import udf
 from sklearn import preprocessing
 
 
@@ -39,7 +40,7 @@ grades = ['missing', 'Po', 'Fa', 'TA', 'Gd', 'Ex']
 label_vars = ['ExterQual', 'BsmtQual', 'KitchenQual']
 
 for var in label_vars:
-    X[var + '_enc'] = label_encode(full[var].fillna('missing'), grades)
+    X[var + '_enc'] = udf.label_encode(full[var].fillna('missing'), grades)
 
 # One-hot encode discrete categorical features
 X = pd.merge(
@@ -56,7 +57,7 @@ for var in ord_vars:
 # Numerical features
 num_vars = ['GrLivArea', 'TotalBsmtSF', 'GarageArea']
 for var in num_vars:
-    X[var + '_scale'] = preprocessing.scale(full[var].fillna(0))
+    X[var + '_scaled'] = preprocessing.scale(full[var].fillna(0))
 # ----
 
 # -- Save data --
