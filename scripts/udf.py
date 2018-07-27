@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import os
 import sys
+import json
 from time import asctime
 from sklearn import preprocessing
 from scipy import stats
@@ -55,7 +56,7 @@ def rmse(y, y_pred):
     """
     Define root-mean-squared error for model optimisation.
     """
-    return np.sqrt(np.mean((y_pred - y)**2))
+    return np.sqrt(np.mean((y - y_pred)**2))
 
 
 def check_dir(path, filename):
@@ -95,27 +96,38 @@ def log_result(log_dir, log_name, features, params, score):
     model = os.path.basename(sys.argv[0])
 
     if check_dir(log_dir, log_name):
-        log = pd.read_csv(log_dir + log_name)
+        log = pd.read_csv(log_dir + log_name, index_col='datetime')
         log = log.append(
             pd.DataFrame(
                 data={
-                    'datetime': asctime(),
-                    'model': model,
-                    'features': features,
-                    'params': params,
-                    'score': score
-                }),
-            ignore_index=True)
+                    'datetime':
+                    asctime(),
+                    'model':
+                    model,
+                    'features':
+                    ', '.join(str(feat) for feat in features),
+                    'params':
+                    ', '.join("{!s}={!r}".format(key, val)
+                              for (key, val) in params.items()),
+                    'score':
+                    score
+                }, index=pd.Index([asctime()])), sort=True)
 
     else:
         log = pd.DataFrame(
             data={
-                'datetime': asctime(),
-                'model': model,
-                'features': features,
-                'params': params,
-                'score': score
-            })
+                'datetime':
+                asctime(),
+                'model':
+                model,
+                'features':
+                ', '.join(str(feat) for feat in features),
+                'params':
+                ', '.join("{!s}={!r}".format(key, val)
+                          for (key, val) in params.items()),
+                'score':
+                score
+            }, index=pd.Index([asctime()]))
 
     log.to_csv(path_or_buf=(log_dir + log_name))
 

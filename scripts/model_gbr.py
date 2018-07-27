@@ -1,4 +1,7 @@
-# -- Setup --
+#
+# ─── SETUP ──────────────────────────────────────────────────────────────────────
+#
+
 import pandas as pd
 import numpy as np
 import udf
@@ -15,9 +18,11 @@ X_train = pd.read_csv(data_dir + 'clean_train.csv')
 Y_train = X_train['SalePrice_log']
 X_train.drop(labels='SalePrice_log', axis=1, inplace=True)
 X_test = pd.read_csv(data_dir + 'clean_test.csv')
-# ----
 
-# -- Build Model --
+#
+# ─── BUILD MODEL ────────────────────────────────────────────────────────────────
+#
+
 # Build gradient boosted regressor,
 # Optimise hyperparameters with GridSearchCV
 param_grid = {
@@ -49,9 +54,15 @@ fi = pd.DataFrame(
 print('\nFeature Importance:')
 print(fi.reindex(fi.Importance.sort_values(ascending=False).index))
 
-# -- Create .CSV for submission --
-X_test['SalePrice'] = pd.DataFrame(
-    gbr_cv.predict(X_test.drop(labels='Id', axis=1))).apply(lambda x: 10**x)
-Y_test = X_test[['Id', 'SalePrice']]
-Y_test.to_csv(path_or_buf=(data_dir + 'submit.csv'), index=False)
-print('submit.csv created!')
+# Log Training
+udf.log_result('./logs/', 'train_log.csv', X_train.columns, gbr_cv.best_params_, gbr_cv.best_score_)
+
+#
+# ─── SUBMISSION ──────────────────────────────────────────────────
+#
+
+# X_test['SalePrice'] = pd.DataFrame(
+#     gbr_cv.predict(X_test.drop(labels='Id', axis=1))).apply(lambda x: 10**x)
+# Y_test = X_test[['Id', 'SalePrice']]
+# Y_test.to_csv(path_or_buf=(data_dir + 'submit.csv'), index=False)
+# print('submit.csv created!')

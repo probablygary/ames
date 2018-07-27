@@ -1,4 +1,4 @@
-Blueste,BrDale,BrkSide,ClearCr,CollgCr,Crawfor,Edwards,Gilbert,IDOTRR,MeadowV,Mitchel,NAmes,NPkVill,NWAmes,NoRidge,NridgHt,OldTown,SWISU,Sawyer,SawyerW,Somerst,StoneBr,Timber,Veenker,Id,ExterQual_enc,BsmtQual_enc,KitchenQual_enc,OverallQual,GrLivArea_scale,TotalBsmtSF_scale,GarageArea_scale
+Blueste,BrDale,BrkSide,ClearCr,CollgCr,Crawfor,Edwards,Gilbert,IDOTRR,MeadowV,Mitchel,NAmes,NPkVill,NWAmes,NoRidge,NridgHt,OldTown,SWISU,Sawyer,SawyerW,Somerst,StoneBr,Timber,Veenker,Id,ExterQual_enc,BsmtQual_enc,KitchenQual_enc,OverallQual,GrLivArea_scaled,TotalBsmtSF_scaled,GarageArea_scaled
 0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1461,4,4,4,5,-1.195261766509382,-0.38412699947000595,1.1939160266490856
 0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1462,4,4,2,6,-0.33947025599674,0.629375181432362,-0.7457702789287386
 0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1463,4,2,4,5,0.2534568875455062,-0.2798292358872119,0.04309735731104635

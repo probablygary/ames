@@ -4,20 +4,6 @@ import numpy as np
 import udf
 from sklearn import preprocessing
 
-
-# UDFs
-def label_encode(var, values):
-    '''
-    Function to streamline label encoding ordinal features. 
-    'values' argument must be list of labels in ascending order.
-    '''
-    le = preprocessing.LabelEncoder()
-    le.fit(values)
-    var_encoded = le.transform(var)
-
-    return var_encoded
-
-
 # Data folder
 data_dir = './data/'
 
