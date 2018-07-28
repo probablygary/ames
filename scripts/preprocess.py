@@ -1,4 +1,7 @@
-# -- Setup --
+#
+# ─── SETUP ──────────────────────────────────────────────────────────────────────
+#
+
 import pandas as pd
 import numpy as np
 import udf
@@ -11,9 +14,11 @@ data_dir = './data/'
 full = pd.read_csv(data_dir + 'train.csv').append(
     pd.read_csv(data_dir + 'test.csv'), sort=True, ignore_index=True)
 print('Setup complete')
-# ----
 
-# -- Feature Engineering --
+#
+# ─── FEATURE ENGINEERING ────────────────────────────────────────────────────────
+#
+
 # Initialise DataFrame for independent variables
 X = pd.DataFrame(full['Id'])
 
@@ -44,9 +49,11 @@ for var in ord_vars:
 num_vars = ['GrLivArea', 'TotalBsmtSF', 'GarageArea']
 for var in num_vars:
     X[var + '_scaled'] = preprocessing.scale(full[var].fillna(0))
-# ----
 
-# -- Save data --
+#
+# ─── SAVE DATA ──────────────────────────────────────────────────────────────────
+#
+
 X.loc[X['Id'] <= 1460].drop(
     labels='Id', axis=1).to_csv(
         path_or_buf=data_dir + 'clean_train.csv', index=False)

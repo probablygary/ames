@@ -56,7 +56,7 @@ def rmse(y, y_pred):
     """
     Define root-mean-squared error for model optimisation.
     """
-    return np.sqrt(np.mean((y - y_pred)**2))
+    return np.sqrt(np.mean(np.square(y - y_pred)))
 
 
 def check_dir(path, filename):
@@ -98,10 +98,9 @@ def log_result(log_dir, log_name, features, params, score):
     if check_dir(log_dir, log_name):
         log = pd.read_csv(log_dir + log_name, index_col='datetime')
         log = log.append(
-            pd.DataFrame(
+            pd.DataFrame.from_records(
                 data={
-                    'datetime':
-                    asctime(),
+                    'datetime': [asctime()],
                     'model':
                     model,
                     'features':
@@ -111,13 +110,14 @@ def log_result(log_dir, log_name, features, params, score):
                               for (key, val) in params.items()),
                     'score':
                     score
-                }, index=pd.Index([asctime()])), sort=True)
+                },
+                index='datetime'),
+            sort=True)
 
     else:
-        log = pd.DataFrame(
+        log = pd.DataFrame.from_records(
             data={
-                'datetime':
-                asctime(),
+                'datetime': [asctime()],
                 'model':
                 model,
                 'features':
@@ -127,7 +127,8 @@ def log_result(log_dir, log_name, features, params, score):
                           for (key, val) in params.items()),
                 'score':
                 score
-            }, index=pd.Index([asctime()]))
+            },
+            index='datetime')
 
     log.to_csv(path_or_buf=(log_dir + log_name))
 
