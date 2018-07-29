@@ -28,10 +28,11 @@ if __name__ == '__main__':
     # Build gradient boosted regressor,
     # Optimise hyperparameters with GridSearchCV
     param_grid = {
-        'learning_rate': [0.01, 0.02, 0.05],
+        'learning_rate': [0.0001, 0.01, 0.02],
         'n_estimators': [1500, 1750, 2000],
-        'max_depth': [1, 3, 5],
-        'max_features': ['log2']
+        'max_depth': [d for d in range(1, 5, 2)],
+        'max_features': ['log2'],
+        'subsample': [1.0, 0.7, 0.6]
     }
     gbr = GradientBoostingRegressor(random_state=5)
     rmse_scorer = make_scorer(udf.rmse, greater_is_better=False)
@@ -39,7 +40,7 @@ if __name__ == '__main__':
         n_jobs=-1,
         estimator=gbr,
         param_grid=param_grid,
-        cv=5,
+        cv=10,
         verbose=2,
         return_train_score=True,
         scoring=rmse_scorer)
@@ -65,8 +66,9 @@ if __name__ == '__main__':
     # ─── SUBMISSION ──────────────────────────────────────────────────
     #
 
-    # X_test['SalePrice'] = pd.DataFrame(
-    #     gbr_cv.predict(X_test.drop(labels='Id', axis=1))).apply(lambda x: 10**x)
-    # Y_test = X_test[['Id', 'SalePrice']]
-    # Y_test.to_csv(path_or_buf=(data_dir + 'submit.csv'), index=False)
-    # print('submit.csv created!')
+    X_test['SalePrice'] = pd.DataFrame(
+        gbr_cv.predict(X_test.drop(labels='Id',
+                                   axis=1))).apply(lambda x: 10**x)
+    Y_test = X_test[['Id', 'SalePrice']]
+    Y_test.to_csv(path_or_buf=(data_dir + 'submit.csv'), index=False)
+    print('submit.csv created!')
