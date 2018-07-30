@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import udf
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import preprocessing
 from sklearn.model_selection import KFold
@@ -12,6 +11,46 @@ from scipy import stats
 
 
 # -- Setup --
+def anova(df, dependent_var, independent_var):
+    """
+    Conduct one-way ANOVA of categorical features.
+
+    Args:
+        df: Pandas DataFrame containing both dependent and independent features.
+        dependent_var: name of a multi-level dependent feature contained in df.
+        independent_vars: name of a numerical independent feature contained in df.
+    
+    Returns:
+        f-value and p-value of ANOVA of the dependent feature.
+    """
+
+    values = list()
+    df.fillna('missing', inplace=True)
+    for level in df[dependent_var].unique().tolist():
+        values.append(df.loc[df[dependent_var] == level, independent_var]
+                      .values.tolist())
+    f_value, p_value = stats.f_oneway(*values)
+
+    return f_value, p_value
+
+
+def label_encode(var, values):
+    """
+    Label encode ordinal features from string values to numerical values.
+
+    Args:
+        var: Pandas DataFrame or Series to be encoded.
+        values: List of labels in ascending order.
+    
+    Returns:
+        Pandas DataFrame of transformed feature.
+    """
+
+    le = preprocessing.LabelEncoder()
+    le.fit(values)
+    var_encoded = le.transform(var)
+
+    return var_encoded
 # Seaborn settings
 sns.set()
 
@@ -83,7 +122,7 @@ print(corr['SalePrice_log'].sort_values(ascending=False))
 # ANOVA of categorical variables
 anova_output = pd.DataFrame(columns=['feature', 'f_value', 'p_value'])
 for col in train.select_dtypes(include=['object']).columns.tolist():
-    f_value, p_value = udf.anova(train, col, 'SalePrice_log')
+    f_value, p_value = anova(train, col, 'SalePrice_log')
     anova_output = anova_output.append(
         {
             'feature': col,
@@ -106,7 +145,7 @@ grades = ['missing', 'Po', 'Fa', 'TA', 'Gd', 'Ex']
 label_vars = ['ExterQual', 'BsmtQual', 'KitchenQual']
 
 for var in label_vars:
-    X[var + '_enc'] = udf.label_encode(train[var].fillna('missing'), grades)
+    X[var + '_enc'] = label_encode(train[var].fillna('missing'), grades)
 
 # %%
 # One-hot encoding discrete categorical features
@@ -137,21 +176,3 @@ fi = pd.DataFrame(data={
 })
 print('\nFeature Importance:')
 print(fi.reindex(fi.importance.sort_values(ascending=False).index))
-
-# %%
-# Actually submitting to check leaderboard performance
-X_sub = pd.DataFrame()
-
-for var in label_vars:
-    X_sub[var + '_enc'] = udf.label_encode(test[var].fillna('missing'), grades)
-
-X_sub = pd.merge(
-    pd.get_dummies(test['Neighborhood'], drop_first=True),
-    X_sub,
-    left_index=True,
-    right_index=True)
-rfr = RandomForestRegressor(verbose=0)
-rfr.fit(X, Y)
-test['SalePrice'] = np.exp(rfr.predict(X_sub))
-submit = test[['Id', 'SalePrice']]
-submit.to_csv(path_or_buf=(data_dir + 'submit.csv'), index=False)
