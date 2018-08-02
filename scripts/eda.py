@@ -60,6 +60,31 @@ data_dir = './data/'
 # Read input files
 train = pd.read_csv(data_dir + 'train.csv')
 test = pd.read_csv(data_dir + 'test.csv')
+
+# Log-transform target feature
+train['SalePrice_log'] = np.where(train['SalePrice'] <= 0, train['SalePrice'],
+                                  np.log10(train['SalePrice']))
+Y = train['SalePrice_log']
+
+# -- Feature engineering --
+# Initialise DataFrame for independent variables
+X = pd.DataFrame()
+
+# Label-encoding ordinal features
+grades = ['missing', 'Po', 'Fa', 'TA', 'Gd', 'Ex']
+label_vars = ['ExterQual', 'BsmtQual', 'KitchenQual']
+
+for var in label_vars:
+    X[var + '_enc'] = label_encode(train[var].fillna('missing'), grades)
+
+# One-hot encoding discrete categorical features
+X = pd.merge(
+    pd.get_dummies(train['Neighborhood'], drop_first=True),
+    X,
+    left_index=True,
+    right_index=True)
+
+
 print('Setup complete')
 # ----
 

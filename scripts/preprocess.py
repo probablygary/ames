@@ -46,7 +46,7 @@ for var in ord_vars:
     X[var] = full[var]
 
 # Numerical features
-num_vars = ['GrLivArea', 'TotalBsmtSF', 'GarageCars', '1stFlrSF']
+num_vars = ['GrLivArea', 'TotalBsmtSF', 'GarageCars', '1stFlrSF', 'TotRmsAbvGrd', 'LotArea          ']
 for var in num_vars:
     X[var + '_scaled'] = preprocessing.scale(full[var].fillna(0))
 
